@@ -12,6 +12,7 @@ jobs:
     env:
       AWS_REGION: us-east-1
       BUCKET_NAME: clcm3404-group1-game
+      DISTRIBUTION_ID: E3J6E4JUFYSQ8K
     steps:
       - uses: actions/checkout@v3
       - name: Configure AWS credentials
@@ -21,4 +22,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
       - name: Deploy
-        run: aws s3 cp ./GreenMahjong/www/ s3://${BUCKET_NAME} --recursive
+        run: |
+          aws s3 cp ./GreenMahjong/www/ s3://${BUCKET_NAME} --recursive
+          aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/*"
